@@ -19,7 +19,7 @@ class GPSPathGenerator(Node):
         self.utm = Proj(init='epsg:32654')  # UTMゾーンに応じてEPSGコードを変更
         
         # gps_data = [...] # 例: [(lat1, lon1), (lat2, lon2), ...]
-        file_path = '/home/ros2_ws/src/gnss_navigation/config/path_compress.csv'
+        file_path = '/home/ros2_ws/src/gnss_navigation/config/gazebo_compress.csv'
         df = pd.read_csv(file_path, header=None)     
         
         self.path = Path()
@@ -48,6 +48,14 @@ class GPSPathGenerator(Node):
             pose = PoseStamped()
             pose.header.stamp = self.get_clock().now().to_msg()
             pose.header.frame_id = 'map'
+            # if x > 0:
+            #     pose.pose.position.x = x - base_x
+            # else:
+            #     pose.pose.position.x = x + base_x
+            # if y > 0:
+            #     pose.pose.position.y = y - base_y
+            # else:
+            #     pose.pose.position.y = y + base_y
             pose.pose.position.x = x - base_x
             pose.pose.position.y = y - base_y
             # pose.pose.orientation = tf_transformations.quaternion_from_euler(0, 0, 0)
@@ -99,6 +107,7 @@ class GPSPathGenerator(Node):
         # 生成した経路を出力するコードを記述
         # print(path)
         self.publisher_.publish(self.smooth_path_)
+        # self.publisher_.publish(self.path)
         # pass
         
 def main():
